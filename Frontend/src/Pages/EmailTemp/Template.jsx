@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './sendMail.css';
+import { HOME_API } from  '../../lib/constant';
 
 function Template() {
   const [template, setTemplate] = useState('');
@@ -31,7 +32,7 @@ function Template() {
 
   const saveTemplate = () => {
     // Send the updated template to the server to be saved
-    fetch(`https://email-marketing-vikash.vercel.app/template?template=${selectedTemplate}`, {
+    fetch(`${HOME_API}/template?template=${selectedTemplate}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json', // Update the content type to JSON
@@ -52,7 +53,7 @@ function Template() {
 
   const deleteTemplate = () => {
     // Delete the template on the server
-    fetch(`https://email-marketing-vikash.vercel.app/template?template=${selectedTemplate}`, {
+    fetch(`${HOME_API}/template?template=${selectedTemplate}`, {
       method: 'DELETE',
     })
       .then((response) => response.json())

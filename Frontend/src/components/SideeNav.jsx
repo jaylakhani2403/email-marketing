@@ -8,11 +8,11 @@ import { FaBars } from 'react-icons/fa';
 import { FaEnvelope } from 'react-icons/fa';
 
 import {HiUserGroup} from 'react-icons/hi';
-import{MdAdminPanelSettings} from 'react-icons/md';
+// import{MdAdminPanelSettings} from 'react-icons/md';
 
 import { AiFillHome } from 'react-icons/ai';
 import { FiLogOut} from 'react-icons/fi'
-import {SiAdguard} from 'react-icons/si';
+// import {SiAdguard} from 'react-icons/si';
 
 const SideeNav = () => {
 
@@ -22,7 +22,7 @@ const SideeNav = () => {
   const token = localStorage.getItem('userInfo');
   let decodedToken = jwtDecode(token);
   const role = decodedToken.data.is_admin;
-  console.log(role, 'gg');
+  // console.log(role, 'gg');
 
 
 
@@ -46,34 +46,20 @@ const SideeNav = () => {
     {isNavOpen ? 'Home' : <AiFillHome />}
       
     </NavLink>
+
     <NavLink to={'/home/Customers'} >
        
     {isNavOpen ? 'Customer Details' : <HiUserGroup/>}
 
 
   </NavLink>
-          
-          {role ==1 && (
-
-            <>
-            <NavLink to={'/home/task'} >
+  <NavLink to={'/home/task'} >
             {isNavOpen ? 'Manage templates' : <FaEnvelope />}
             </NavLink>
-            <NavLink to="/home/employees" >
-            {isNavOpen ? 'Manage Employees' : <MdAdminPanelSettings/>}
-            
-            
-            
-            
-            </NavLink>
-            <NavLink to="/home/audit" >
-            {isNavOpen ? 'Audit Logs' : <SiAdguard/>}
-            
-            
-            
-            
-            </NavLink>
+          
+          {role ===1 && (
 
+            <>
             </>
           )
           

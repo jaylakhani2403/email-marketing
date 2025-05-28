@@ -6,14 +6,15 @@ import '../Registration/Registration.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { HOME_API } from '../../lib/constant';
 
 const initialValues = {
   email: '',
 };
 
 const ResetPassword = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {
     values,
     errors,
@@ -35,7 +36,7 @@ const ResetPassword = () => {
 
   const resetPasswordHandle = () => {
     axios
-      .post('https://email-marketing-vikash.vercel.app/user/forget-Password', {
+      .post(`${HOME_API}/user/forget-Password`, {
         email: values.email,
       })
       .then((response) => {

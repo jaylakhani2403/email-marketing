@@ -9,7 +9,7 @@ Router.get('/userDetails',userService.usersList);
 Router.delete('/deleteuser/:id', userService.deleteUser);
 Router.put('/updateuser/:id', userService.updateUserAccountStatus);
 Router.get('/customerDetails',userService.customerList);
-Router.put('/updatecustomerDetails/:id', userService.updatecustomerStatus);
+Router.put('/updatecustomerDetails/:id', userService.updateCustomerStatus);
 Router.post('/forget-Password', userService.forgetPassword);
 Router.get('/templates', userService.fetchTemp);
 Router.post('/templates', userService.newTemp);
@@ -18,4 +18,5 @@ Router.delete('/templates/:id', userService.DeleteTemp);
 Router.get('/customers',userService.customers);
 Router.get('/audit',userService.audit);
 Router.get('/adminpowersaudit',userService.adminpowersaudit);
+Router.get('/customers/:id', userService.updateCustomerStatus);
 module.exports=Router

@@ -3,15 +3,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import './sendMail.css'
+import { HOME_API } from  '../../lib/constant';
 const SendMailPage = () => {
   const [templateName, setTemplateName] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
 
   const handleSendEmail = async () => {
     try {
-      await axios.post('https://email-marketing-vikash.vercel.app/mail/send-email', {
+      await axios.post(`${HOME_API}/mail/send-email`, {
         templateName,
-        recipientEmail,
+        recipientEmail   
       });
       console.log('Email sent successfully!');
       toast.success('Email sent successfully!');
@@ -48,8 +49,7 @@ const SendMailPage = () => {
       </div>
       <div className="button-section ">
         <button className='button' onClick={handleSendEmail}>Send Email</button>
-      </div>
-      
+      </div>      
     </div>
   );
 };

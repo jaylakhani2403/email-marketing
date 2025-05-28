@@ -8,24 +8,28 @@ const CustomerSchema = new mongoose.Schema({
   },
   customer_name: {
     type: String,
-    required: true,
+    
   },
   template_name: {
     type: String,
-    required: true,
+    
   },
   status: {
     type: String,
-    required: true,
+    
   },
   uploadedby: {
     type: String,
-    required: true,
   },
   date: {
     type: Date,
     default: Date.now,
-  }
+  },
+  isEmailOpened: {
+  type: Boolean,
+  default: false
+}
+
 });
 
 

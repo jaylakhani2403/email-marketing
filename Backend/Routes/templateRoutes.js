@@ -36,7 +36,7 @@ const auditLog = async (email, type, templateName) => {
 };
 
 
-// Get the contents of a specific template
+// // Get the contents of a specific template
 router.get('/', async (req, res) => {
   const { template } = req.query;
   const templatePath = path.join(templatesPath, `${template}.html`);
@@ -51,6 +51,41 @@ console.log(templatePath);
     res.status(500).json({ error: 'Failed to read the template file' });
   }
 });
+// Get the contents of a specific template and inject email tracking pixel
+// router.get('/', async (req, res) => {
+//   const { template, _id } = req.query;
+//   const templatePath = path.join(templatesPath, `${template}.html`);
+//   const email = userServices.getLoggedInUserEmail(); // Replace with your method to get the user's email
+
+//   try {
+//     let data = await fs.promises.readFile(templatePath, 'utf8');
+
+//     // Inject tracking pixel before </body> or at end if not found
+//     const trackingPixel = `
+//       <img
+//         src="http://localhost:8000/user/customers/${_id}?markOpened=true"
+//         width="1"
+//         height="1"
+//         style="display: none;"
+//         alt=""
+//       />
+//     `;
+//     // console.log(_id);
+
+//     if (data.includes('</body>')) {
+//       data = data.replace('</body>', `${trackingPixel}</body>`);
+//     } else {
+//       data += trackingPixel;
+//     }
+
+//     // Log and respond
+//     res.json({ template: data });
+//     await auditLog(email, 'reading', template);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Failed to read the template file' });
+//   }
+// });
 
 // Update the contents of a specific template
 router.put('/', async (req, res) => {

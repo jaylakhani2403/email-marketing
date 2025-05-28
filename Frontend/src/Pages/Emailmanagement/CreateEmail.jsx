@@ -13,7 +13,7 @@ const CreateEmail = () => {
           <table align="center" border={0} cellPadding={0} cellSpacing={0} role="presentation" width="100%" style={{marginTop: '32px'}}>
             <tbody>
               <tr>
-                <td><img alt="Vercel" src="https://react-email-demo-ijnnx5hul-resend.vercel.app/static/vercel-logo.png" width={40} height={37} style={{display: 'block', outline: 'none', border: 'none', textDecoration: 'none', marginLeft: 'auto', marginRight: 'auto', marginTop: '0px', marginBottom: '0px'}} /></td>
+                <td><img alt="Vercel" src="" width={40} height={37} style={{display: 'block', outline: 'none', border: 'none', textDecoration: 'none', marginLeft: 'auto', marginRight: 'auto', marginTop: '0px', marginBottom: '0px'}} /></td>
               </tr>
             </tbody>
           </table>

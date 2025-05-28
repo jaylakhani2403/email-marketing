@@ -10,3 +10,4 @@ dbCon.on("error", console.error.bind(console, "connection error: "));
 dbCon.once("open", function () {
   console.log("Connected successfully");
 });
+

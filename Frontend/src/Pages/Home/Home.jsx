@@ -9,13 +9,14 @@ import ManageUsers from '../manage users/ManageUsers';
 import CustomerDetails from '../Customers/CustomerDetails';
 import LandingPage from '../LandingPage/LandingPage';
 import Audit from '../Audit/Audit';
+// import { HOME_API } from  '../../lib/constant';
 
 const Home = () => {
   const token = localStorage.getItem('userInfo');
   let decodedToken = jwtDecode(token);
-  console.log(decodedToken, 'decodedToken');
+  // console.log(decodedToken, 'decodedToken');
   const role = decodedToken.data.is_admin;
-  console.log(role, 'ghg');
+  // console.log(role, 'ghg');
   return (
     <div>
       
@@ -31,7 +32,7 @@ const Home = () => {
           <Route path="/LandingPage" element={<LandingPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/customers" element={<CustomerDetails />} />
-          {role == 1 && (
+          {role === 1 && (
             <>
               <Route path="/task" element={<Task />} />
               <Route path="/employees" element={<ManageUsers />} />

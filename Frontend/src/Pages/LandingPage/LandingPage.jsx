@@ -3,7 +3,8 @@ import { FaEnvelope, FaTasks, FaClock, FaChartLine, FaInstagram, FaGithub } from
 import { MdEmail, MdPhone } from 'react-icons/md';
 import './LandingPage.css';
 import emailImage from '../../assets/email.jpg';
-import featureImage from '../../assets/features.jpg';
+// import featureImage from '../../assets/features.jpg';
+// import { HOME_API } from  '../../lib/constant';
 
 const LandingPage = () => {
   return (
@@ -37,10 +38,10 @@ const LandingPage = () => {
       <h2>Contact Us</h2>
         <ul >
        
-          <li><MdEmail /> email@example.com</li>
-          <li><MdPhone /> +1 123-456-7890</li>
-          <li><FaInstagram /> <a href="https://www.instagram.com/example/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-          <li><FaGithub /> <a href="https://github.com/example" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><MdEmail /></li>
+          <li><MdPhone /> </li>
+          <li><FaInstagram /> <a href="" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><FaGithub /> <a href="" target="_blank" rel="noopener noreferrer">GitHub</a></li>
         </ul>
         </div>
         <div className="feature-image">

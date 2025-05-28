@@ -8,6 +8,7 @@ import './Registration.css'
 import axios from 'axios';
 import work from '../../assets/work.jpg';
 
+import { HOME_API } from  '../../lib/constant';
 
 
 
@@ -38,7 +39,7 @@ const Registration = () => {
  
 
   const signupHandle =()=>{
-    axios.post('https://email-marketing-vikash.vercel.app/user/register',{
+    axios.post(`${HOME_API}/user/register`,{
       username:values.username,email:values.email,password:values.password
     }).then((data)=>{
       if(data.data.status===200){

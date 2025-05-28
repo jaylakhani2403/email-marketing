@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Audit.css';
+import { HOME_API } from  '../../lib/constant';
 
 const Audit = () => {
   const [adminPowersLogs, setAdminPowersLogs] = useState([]);
@@ -10,7 +11,7 @@ const Audit = () => {
 
   const fetchAuditLogs = async (tableName) => {
     try {
-      const response = await axios.get(`https://email-marketing-vikash.vercel.app/user/${tableName}`);
+      const response = await axios.get(`${HOME_API}/user/${tableName}`);
       if (tableName === 'adminpowersaudit') {
         setAdminPowersLogs(response.data);
         setCustomersLogs([]);

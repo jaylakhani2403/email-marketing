@@ -8,7 +8,7 @@ const Template = require('../models/Template');
 const Customer = require('../models/Customer');
 
 const Imap = require('imap');
-
+const api="https://localhost:8000"
 dotenv.config();
 
 const SMTP_MAIL = process.env.SMTP_MAIL;
@@ -75,7 +75,7 @@ const displayAllEmails = (recipientEmail, res) => {
     f.once('end', async () => {
       if (failedRecipientExists) {
         console.log('Recipient email does not exist:', recipientEmail);
-  
+
         // Update the database status for the recipient email
         try {
           await Customer.updateOne(
@@ -90,7 +90,7 @@ const displayAllEmails = (recipientEmail, res) => {
           }
           return;
         }
-  
+
         if (!res.headersSent) {
           res.status(400).json({ error: 'Recipient email does not exist' });
         }
@@ -110,15 +110,15 @@ const displayAllEmails = (recipientEmail, res) => {
           return;
         }
       }
-  
+
       cb(null, allEmails);
     });
 
   };
-const closeConnection = () => {
+  const closeConnection = () => {
     imap.end();
   };
- 
+
 
   imap.once('ready', () => {
     openInbox((error) => {
@@ -142,13 +142,15 @@ const closeConnection = () => {
     console.error('IMAP error:', error);
     closeConnection();
   });
-  
+
   imap.once('end', () => {
     console.log('IMAP connection ended');
   });
 
   imap.connect();
-};const sendingEmail = async (req, recipientEmail, templateName, res) => {
+};
+
+const sendingEmail = async (req, recipientEmail, templateHtml, res) => {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -167,19 +169,12 @@ const closeConnection = () => {
     });
 
     try {
-      const template = await Template.findOne({ type: templateName }).exec();
 
-      if (!template) {
-        console.error('Template not found');
-        if (!res.headersSent) {
-          res.status(404).json({ error: 'Template not found' });
-        }
-        
+
         // Update the database status for the recipient email
         try {
           await Customer.updateOne(
             { customer_email: recipientEmail },
-            { $set: { status: 'Template not found' } }
           );
           console.log('Status updated successfully');
         } catch (error) {
@@ -189,14 +184,10 @@ const closeConnection = () => {
           }
           return;
         }
-        
-        return;
-      }
-
       const mailOptions = {
         from: SMTP_MAIL,
         to: recipientEmail,
-        html: template.body,
+        html: templateHtml,
       };
 
       try {
@@ -214,12 +205,11 @@ const closeConnection = () => {
           if (!res.headersSent) {
             res.status(400).json({ error: 'Recipient email does not exist' });
           }
-          
+
           // Update the database status for the recipient email
           try {
             await Customer.updateOne(
-              { customer_email: recipientEmail },
-              { $set: { status: 'Recipient email does not exist' } }
+              { customer_email: recipientEmail }
             );
             console.log('Status updated successfully');
           } catch (error) {
@@ -244,12 +234,11 @@ const closeConnection = () => {
       if (!res.headersSent) {
         res.status(500).json({ error: 'Error retrieving email template' });
       }
-      
+
       // Update the database status for the recipient email
       try {
         await Customer.updateOne(
           { customer_email: recipientEmail },
-          { $set: { status: 'Error retrieving email template' } }
         );
         console.log('Status updated successfully');
       } catch (error) {
@@ -265,7 +254,7 @@ const closeConnection = () => {
     if (!res.headersSent) {
       res.status(500).json({ error: 'Error sending email' });
     }
-    
+
     // Update the database status for the recipient email
     try {
       await Customer.updateOne(
@@ -283,23 +272,46 @@ const closeConnection = () => {
   }
 };
 
-
-
 router.post('/send-email', async (req, res) => {
-  const { recipientEmail, templateName } = req.body;
+  const { recipientEmail, templateName, id } = req.body;
 
   try {
-    await sendingEmail(req, recipientEmail, templateName, res);
+    // Fetch the template from the database based on the type
+    const template = await Template.findOne({ type: templateName }).exec();
+
+    if (!template) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+
+   let templateHtml = template.body;
+
+    // Inject tracking pixel
+    const trackingPixel = `
+      <img
+  src='${api}/user/customers/${id}?markOpened=true'
+  width="20"
+  height="20"
+  style="border: 2px solid red; background-color: yellow;"
+  alt="Tracking Pixel"
+/>
+    `;
+
+    if (templateHtml.includes('</body>')) {
+      templateHtml = templateHtml.replace('</body>', `${trackingPixel}</body>`);
+    } else {
+      templateHtml += trackingPixel;
+    }
+    console.log(templateHtml)
+    await sendingEmail(req, recipientEmail, templateHtml, res);
 
     // Delay execution of displayAllEmails by 5 seconds
     setTimeout(() => {
       displayAllEmails(recipientEmail, res);
     }, 5000);
-
-    // Other code for updating other functionalities
-  } catch (error) {
+  } catch (err) {
+    console.error('Error sending email:', err);
     if (!res.headersSent) {
-      res.status(500).json({ error: 'Error sending email' });
+      res.status(500).json({ error: 'Error in sending email' });
     }
   }
 });

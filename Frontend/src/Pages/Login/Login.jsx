@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import work from '../../assets/work.jpg';
+import { HOME_API } from  '../../lib/constant';
 
 const initialValues = {
   identifier: '',
@@ -39,7 +40,7 @@ const Login = () => {
 
   const generateOtp = () => {
     axios
-      .post('https://email-marketing-vikash.vercel.app/user/generate-otp', {
+      .post(`${HOME_API}/user/generate-otp`, {
         identifier: values.identifier,
       })
       .then((data) => {
@@ -56,13 +57,13 @@ const Login = () => {
 
   const loginHandle = () => {
     axios
-      .post('https://email-marketing-vikash.vercel.app/user/login', {
+      .post(`${HOME_API}/user/login`, {
         identifier: values.identifier,
         password: values.password,
         otp: otp,
       })
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         if (data.data.status === 200) {
           localStorage.setItem('userInfo', data.data.token);
           toast.success(data.data.message);

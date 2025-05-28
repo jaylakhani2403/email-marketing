@@ -1,7 +1,7 @@
 const dbCon = require('../config/dbConfig');
 const mongoose = require('mongoose');
 
-
+const api="";
 const randomstring = require('randomstring');
 
 const sendDMail = require('../helpers/sendDMail');
@@ -17,10 +17,10 @@ const Template = require('../models/Template');
 const PasswordReset = require('../models/passwordReset');
 
 const twilio = require('twilio');
-const accountSid = process.env.accountSid;
-const authToken = process.env.authToken;
-const clientno =process.env.ck;
-const phoneno =process.env.pk;
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const clientno =process.env.CK;
+const phoneno =process.env.PK;
 const client = require('twilio')(accountSid, authToken);
 
 const fs = require('fs');
@@ -172,8 +172,8 @@ const generateOTP = async (req, res) => {
 
       // Send the OTP to the user's email using the sendWelcomeEmail function or a dedicated email function
       await sendloginOtp(email, otp);
-      const twilioMessage = `Your login otp is ${otp.slice(3)}`;
-      await sendOtpViaTwilio(twilioMessage);
+      // const twilioMessage = `Your login otp is ${otp.slice(3)}`;
+      // await sendOtpViaTwilio(twilioMessage);
 
       // Store the generated OTP on the server for verification
       otpStorage = otp;
@@ -245,7 +245,7 @@ const generateOTP = async (req, res) => {
 
 
 
-        if (identifier.toLowerCase() === 'vikashchand147@gmail.com' && password.toLowerCase() === '123456') {
+        if (identifier.toLowerCase() === 'jay@gmail.com' && password.toLowerCase() === '123456') {
           const data2 = user.toJSON();
           const auth = jwt.sign({ data: data2 }, SECURITYKEY);
   
@@ -375,7 +375,7 @@ const generateOTP = async (req, res) => {
       // Send verification mail
       const mailSubject = 'Mail verification';
       const randomToken = randomstring.generate();
-      const content = `<p>Hi ${req.body.username},</p><p>Please click on the link to verify your email:</p><a href="https://email-marketing-vikash.vercel.app/mail-verification?token=${randomToken}">Click here</a>`;
+      const content = `<p>Hi ${req.body.username},</p><p>Please click on the link to verify your email:</p><a href='${api}/mail-verification?token=${randomToken}'>Click here</a>`;
       await sendDMail(req.body.email, mailSubject, content);
   
       // Update user token in the database
@@ -446,7 +446,7 @@ const generateOTP = async (req, res) => {
                 </head>
                 <body>
                   <p>Your email has been verified</p>
-                  <a href="https://email-marketing-software.vercel.app/login">Go to Login</a>
+                  <a href='${api}/login'>Go to Login</a>
                 </body>
               </html>
             `;
@@ -535,24 +535,111 @@ const updateUserAccountStatus = async (req, res) => {
   }
 };
 
-const updatecustomerStatus = async (req, res) => {
+// const updateCustomerStatus = async (req, res) => {
+//   const { id } = req.params;
+//   const { status } = req.body;
+
+//   try {
+//     // Check if id is a valid ObjectId
+//     if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return res.status(400).json({ error: 'Invalid customer ID' });
+//     }
+
+//     const customer = await Customer.findOneAndUpdate({ _id: id }, { status }, { new: true });
+//     if (!customer) {
+//       return res.status(404).json({ error: 'Customer not found' });
+//     }
+
+//     res.json({ message: 'Account status updated successfully' });
+//   } catch (error) {
+//     console.error('Error updating account status:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
+
+// ///////////////////////////////email opend or not///////////
+// const emailOpenedOrNot = async (req, res) => {
+//   const { id } = req.params;  // or maybe email from query params if you prefer
+
+//   try {
+//     if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return res.status(400).json({ error: 'Invalid customer ID' });
+//     }
+
+//     const customer = await Customer.findOneAndUpdate(
+//       { _id: id },
+//       { isEmailOpened: true },  // always mark true when endpoint is hit
+//       { new: true }
+//     );
+
+//     if (!customer) {
+//       return res.status(404).json({ error: 'Customer not found' });
+//     }
+
+//     // Optionally send a tiny transparent image as tracking pixel response
+//     res.set('Content-Type', 'image/png');
+//     // You can send a 1x1 transparent pixel here (base64 encoded)
+//     const img = Buffer.from(
+//       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAn8B9fThV7IAAAAASUVORK5CYII=',
+//       'base64'
+//     );
+//     res.send(img);
+//   } catch (error) {
+//     console.error('Error updating email opened status:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
+const updateCustomerStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+  const { markOpened } = req.query;  // check for email open pixel flag in query
 
   try {
-    // Check if id is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid customer ID' });
     }
 
-    const customer = await Customer.findOneAndUpdate({ _id: id }, { status }, { new: true });
+    // Prepare update object dynamically
+    const updateData = {};
+
+    if (status !== undefined) {
+      updateData.status = status;
+    }
+
+    if (markOpened === 'true') {
+      updateData.isEmailOpened = true;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: 'No valid fields to update' });
+    }
+
+    const customer = await Customer.findOneAndUpdate(
+      { _id: id },
+      updateData,
+      { new: true }
+    );
+
     if (!customer) {
       return res.status(404).json({ error: 'Customer not found' });
     }
 
-    res.json({ message: 'Account status updated successfully' });
+    // If this is the email open tracking request, send pixel image
+    if (markOpened === 'true') {
+      res.set('Content-Type', 'image/png');
+      const img = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAn8B9fThV7IAAAAASUVORK5CYII=',
+        'base64'
+      );
+      return res.send(img);
+    }
+
+    // Normal update response
+    res.json({ message: 'Customer updated successfully', customer });
   } catch (error) {
-    console.error('Error updating account status:', error);
+    console.error('Error updating customer:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -661,7 +748,7 @@ const forgetPassword = async (req, res) => {
     if (user) {
       const mailSubject = 'Forget Password';
       const randomToken = randomstring.generate();
-      const content = `<p>Hi ${user.username}</p><p>Please click on the link to reset your password:</p><a href="https://email-marketing-vikash.vercel.app/forget-Password?token=${randomToken}">Click here</a>`;
+      const content = `<p>Hi ${user.username}</p><p>Please click on the link to reset your password:</p><a href='${api}/forget-Password?token=${randomToken}'>Click here</a>`;
       await sendDMail(email, mailSubject, content);
 
       await PasswordReset.deleteOne({ email });
@@ -954,7 +1041,7 @@ const resetPasswordPost = async (req, res) => {
             </head>
             <body>
               <p>Your password has been changed successfully</p>
-              <a href="https://email-marketing-software.vercel.app/login">Login</a>
+              <a href='${api}/login'>Login</a>
             </body>
           </html>
         `;
@@ -1093,7 +1180,7 @@ const customers = async (req, res) => {
       module.exports = { userLogin, forgetPassword,resetPasswordPost,resetPassword,
         
         
-        userSignup, getLoggedInUserEmail ,verifyMail,deleteUser,usersList,customerList,updateUserAccountStatus,updatecustomerStatus
+        userSignup, getLoggedInUserEmail ,verifyMail,deleteUser,usersList,customerList,updateUserAccountStatus,updateCustomerStatus
         ,fetchTemp,newTemp,updateTemp,DeleteTemp,audit,adminpowersaudit,customers,generateOTP
       
       };
