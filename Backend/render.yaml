@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: email-marketing-backend
+    env: node
+    rootDir: backend  # or '.' if your backend is at root level
+    buildCommand: npm install
+    startCommand: npm start
