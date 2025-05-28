@@ -195,9 +195,9 @@ const Login = () => {
               <p className="sign-up">
                 Forgot Password? <Link to="/reset-password">Reset Now</Link>
               </p>
-              <p className="sign-up">
+{/*               <p className="sign-up">
                 Don't have an account? <Link to="/">Sign Up now</Link>
-              </p>
+              </p> */}
             </div>
             <div className="modal-right">
               <img src={work} alt="" />
