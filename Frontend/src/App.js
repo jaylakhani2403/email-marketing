@@ -18,8 +18,8 @@ function App() {
     <Router>
       <div className="App">
       <Routes>
-      <Route path="/" element={<Registration />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/registration" element={<Registration />} />
+      <Route path="/" element={<Login />} />
       <Route path="/email" element={<Email />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/home/*" element={<Home />} />
