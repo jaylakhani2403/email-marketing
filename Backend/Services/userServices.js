@@ -1,7 +1,7 @@
 const dbCon = require('../config/dbConfig');
 const mongoose = require('mongoose');
 
-const api="";
+const api="https://email-marketing-backend-0fhs.onrender.com/";
 const randomstring = require('randomstring');
 
 const sendDMail = require('../helpers/sendDMail');
