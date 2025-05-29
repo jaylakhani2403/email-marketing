@@ -291,8 +291,8 @@ router.post('/send-email', async (req, res) => {
   src='${api}/user/customers/${id}?markOpened=true'
   width="20"
   height="20"
-  style="border: 2px solid red; background-color: yellow;"
-  alt="Tracking Pixel"
+  style="display:none"
+  alt=""
 />
     `;
 
