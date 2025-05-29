@@ -8,7 +8,7 @@ const Template = require('../models/Template');
 const Customer = require('../models/Customer');
 
 const Imap = require('imap');
-const api="https://email-marketing-backend-0fhs.onrender.com/"
+const api="https://email-marketing-backend-0fhs.onrender.com"
 dotenv.config();
 
 const SMTP_MAIL = process.env.SMTP_MAIL;

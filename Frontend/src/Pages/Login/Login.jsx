@@ -196,7 +196,7 @@ const Login = () => {
                 Forgot Password? <Link to="/reset-password">Reset Now</Link>
               </p>
 {/*               <p className="sign-up">
-                Don't have an account? <Link to="/">Sign Up now</Link>
+                Don't have an account? <Link to="/registration">Sign Up now</Link>
               </p> */}
             </div>
             <div className="modal-right">
