@@ -8,7 +8,7 @@ const Template = require('../models/Template');
 const Customer = require('../models/Customer');
 
 const Imap = require('imap');
-const api="https://email-marketing-backend-0fhs.onrender.com/"
+const api="https://email-marketing-backend-0fhs.onrender.com"
 dotenv.config();
 
 const SMTP_MAIL = process.env.SMTP_MAIL;
@@ -291,8 +291,8 @@ router.post('/send-email', async (req, res) => {
   src='${api}/user/customers/${id}?markOpened=true'
   width="20"
   height="20"
-  style="border: 2px solid red; background-color: yellow;"
-  alt="Tracking Pixel"
+  style="display:none"
+  alt=""
 />
     `;
 
