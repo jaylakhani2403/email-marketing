@@ -26,7 +26,7 @@ const Home = () => {
       </div>
       <div className="content-container">
       <div className="heading-tab">
-        <h1>Email Marketing Tool</h1>
+  
       </div>
         <Routes>
           <Route path="/LandingPage" element={<LandingPage />} />
